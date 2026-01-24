@@ -47,6 +47,7 @@ Single-file architecture with clear function separation:
 - **Retry logic**: HTTP requests use `urllib3.Retry` with exponential backoff
 - **Past events**: Calendar sync skips events where `start_dt < datetime.now()`
 - **Rate limiting**: 0.3s delay between PDF downloads to avoid throttling
+- **Always use IST timezone** (`Asia/Kolkata`) for calendar events
 
 ### GitHub Actions Workflow
 
