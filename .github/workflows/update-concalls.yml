@@ -43,7 +43,47 @@ jobs:
           path: concalls.csv
           retention-days: 7
 
-      # Notify on failure - creates a GitHub issue
+      # Email notification on success
+      - name: Send success email
+        if: success()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: ✅ Concalls Sync Completed - ${{ github.run_id }}
+          to: moonkanish@gmail.com
+          from: Concalls Bot <${{ secrets.EMAIL_USERNAME }}>
+          body: |
+            Daily concalls sync completed successfully!
+
+            📅 Date: ${{ github.event.repository.updated_at }}
+            🔗 View run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+            Your Google Sheet and Calendar have been updated with the latest concalls.
+
+      # Email notification on failure
+      - name: Send failure email
+        if: failure()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 587
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: ⚠️ Concalls Sync FAILED - ${{ github.run_id }}
+          to: moonkanish@gmail.com
+          from: Concalls Bot <${{ secrets.EMAIL_USERNAME }}>
+          body: |
+            ⚠️ Daily concalls sync failed!
+
+            📅 Date: ${{ github.event.repository.updated_at }}
+            🔗 View logs: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+            Please check the workflow logs to investigate the issue.
+
+      # Also create GitHub issue on failure
       - name: Create issue on failure
         if: failure()
         uses: actions/github-script@v7
