@@ -39,7 +39,22 @@ Single-file architecture with clear function separation:
 4. **Output**:
    - `write_to_google_sheets()` - Creates/updates sheet with formatting
    - `sync_to_google_calendar()` - Smart sync with duplicate detection via `concall_id` hash
-   - Color-codes overlapping events using `CALENDAR_COLORS`
+   - Color-codes events based on watchlist membership and overlaps
+5. **Watchlist Integration**:
+   - `scrape_watchlists()` - Fetches company lists from user's Screener.in watchlists
+   - `get_watchlist_color()` - Assigns colors based on watchlist membership
+   - `is_my_stonks_company()` - Checks if company is in My Stonks watchlist
+
+### Watchlist Color Coding
+
+Events are color-coded based on watchlist membership:
+- **My Stonks** → Tomato (color ID 11) - also copied to main calendar
+- **Core Watchlist** → Cycles through Flamingo, Tangerine, Banana (IDs 4, 6, 5)
+- **Overlapping non-watchlist events** → Lavender, Sage, Grape, Peacock, Graphite, Blueberry, Basil
+
+### Main Calendar Sync
+
+My Stonks events are automatically copied to the main calendar (`moonkanish@gmail.com`) if they don't already exist there. Duplicate detection uses the same `concall_id` hash mechanism.
 
 ### Key Design Decisions
 
