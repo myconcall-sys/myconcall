@@ -306,22 +306,14 @@ def sync_to_google_calendar(concalls: list[dict]) -> tuple[int, int, int]:
             # Calculate end time (handles midnight rollover correctly)
             end_dt = start_dt + timedelta(hours=CONCALL_DURATION_HOURS)
 
-            # Extract first phone number and create clickable tel: link
-            phone_numbers = c['phone'].split(';')
-            first_phone = phone_numbers[0].strip() if phone_numbers else c['phone']
-            # Clean phone for tel: link (remove spaces, keep + and digits)
-            tel_link = ''.join(ch for ch in first_phone if ch.isdigit() or ch == '+')
-
-            # Build event description with clickable phone link
-            description = f"""📞 TAP TO DIAL: {first_phone}
-tel:{tel_link}
-
-All numbers: {c['phone']}
+            # Build event description
+            description = f"""📞 Dial-in: {c['phone']}
 
 📅 Date: {c['date']}
 ⏰ Time: {c['time']}
 
-📄 PDF: {c['pdf_url']}
+📄 PDF Announcement:
+{c['pdf_url']}
 
 ---
 Auto-synced from Screener.in"""
