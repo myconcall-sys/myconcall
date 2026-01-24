@@ -121,11 +121,38 @@ def write_to_google_sheets(concalls):
 
 
 def sync_to_google_calendar(concalls):
-    """Sync concalls to Google Calendar with smart duplicate handling."""
+    """Sync concalls to Google Calendar with smart duplicate handling and color coding."""
     print("\nSyncing to Google Calendar...")
 
     creds = get_google_credentials()
     service = build('calendar', 'v3', credentials=creds)
+
+    # Google Calendar color IDs (1-11)
+    # 1=Lavender, 2=Sage, 3=Grape, 4=Flamingo, 5=Banana,
+    # 6=Tangerine, 7=Peacock, 8=Graphite, 9=Blueberry, 10=Basil, 11=Tomato
+    COLORS = ['1', '2', '3', '4', '5', '6', '7', '9', '10', '11']  # Skip 8 (Graphite - too dull)
+
+    # Pre-process: group concalls by their start time to assign colors
+    time_slots = {}
+    for c in concalls:
+        try:
+            date_str = c['date'] + " " + c['time']
+            start_dt = datetime.strptime(date_str, "%d %B %Y %I:%M:%S %p")
+            if start_dt >= datetime.now():
+                time_key = start_dt.strftime('%Y-%m-%d %H:%M')
+                if time_key not in time_slots:
+                    time_slots[time_key] = []
+                time_slots[time_key].append(c['company'])
+        except:
+            pass
+
+    # Create color mapping for overlapping events
+    color_map = {}  # company+date+time -> colorId
+    for time_key, companies in time_slots.items():
+        if len(companies) > 1:
+            # Multiple concalls at same time - assign different colors
+            for idx, company in enumerate(companies):
+                color_map[f"{company}_{time_key}"] = COLORS[idx % len(COLORS)]
 
     # Get existing events (future events only, don't touch past)
     now = datetime.utcnow().isoformat() + 'Z'
@@ -165,6 +192,11 @@ def sync_to_google_calendar(concalls):
             # Create unique ID (hash of company + date + time)
             concall_id = hashlib.md5(f"{c['company']}_{c['date']}_{c['time']}".encode()).hexdigest()
 
+            # Check if this event has overlapping concalls - assign color
+            time_key = start_dt.strftime('%Y-%m-%d %H:%M')
+            color_key = f"{c['company']}_{time_key}"
+            color_id = color_map.get(color_key)
+
             # Build event description
             description = f"""📞 Dial-in: {c['phone']}
 
@@ -203,11 +235,16 @@ Auto-synced from Screener.in"""
                 },
             }
 
+            # Add color if there are overlapping events
+            if color_id:
+                event_body['colorId'] = color_id
+
             if concall_id in existing_events:
                 # Update existing event if details changed
                 existing = existing_events[concall_id]
                 if (existing.get('summary') != event_body['summary'] or
-                    existing.get('description') != event_body['description']):
+                    existing.get('description') != event_body['description'] or
+                    existing.get('colorId') != event_body.get('colorId')):
                     service.events().update(
                         calendarId=CALENDAR_ID,
                         eventId=existing['id'],
