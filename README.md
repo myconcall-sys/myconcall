@@ -55,6 +55,18 @@ Every day at 7 AM IST:
 - Google Calendar API
 - GitHub Actions (automation)
 
+## 🔐 Setup (For Forks)
+
+**You must provide your own credentials.** This repo contains no stored credentials.
+
+1. **Screener.in Account** - Create your own account at [screener.in](https://www.screener.in)
+2. **Google Service Account** - Create via [Google Cloud Console](https://console.cloud.google.com) with Sheets, Drive, and Calendar APIs enabled
+3. **GitHub Secrets** - Add these to your forked repo:
+   - `SCREENER_USERNAME` - Your Screener.in email
+   - `SCREENER_PASSWORD` - Your Screener.in password
+   - `GOOGLE_CREDENTIALS_BASE64` - Base64-encoded service account JSON
+   - `EMAIL_USERNAME` / `EMAIL_PASSWORD` - Gmail app password for notifications
+
 ## 🚀 Built With
 
 This entire project was built in 3 hours using [Claude Code](https://claude.ai) with zero prior coding experience.
