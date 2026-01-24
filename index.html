@@ -1,33 +1,249 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>My First GitHub Page</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Anish Moonka - Investor, stock analyst, and business breakdown enthusiast. 9 years in the markets.">
+    <meta name="theme-color" content="#667eea">
+    <title>Anish Moonka | Portfolio</title>
     <style>
+        :root {
+            --primary: #667eea;
+            --primary-dark: #764ba2;
+            --text-dark: #2d3748;
+            --text-light: #718096;
+            --white: #ffffff;
+            --shadow: rgba(0, 0, 0, 0.15);
+            --transition: 0.3s ease;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --text-dark: #f7fafc;
+                --text-light: #a0aec0;
+                --white: #1a202c;
+                --shadow: rgba(0, 0, 0, 0.4);
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             min-height: 100vh;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
         }
+
+        main {
+            width: 100%;
+            max-width: 600px;
+        }
+
         .card {
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
+            background: var(--white);
+            padding: 48px 40px;
+            border-radius: 24px;
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 20px 60px var(--shadow);
+            animation: fadeInUp 0.6s ease;
         }
-        h1 { color: #667eea; }
-        p { color: #666; }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .avatar {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 50%;
+            margin: 0 auto 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            box-shadow: 0 10px 30px var(--shadow);
+        }
+
+        h1 {
+            color: var(--text-dark);
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 16px;
+        }
+
+        .bio {
+            color: var(--text-light);
+            font-size: 1rem;
+            margin-bottom: 32px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .skills {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 32px;
+        }
+
+        .skill-tag {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: var(--white);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .skill-tag {
+                color: #ffffff;
+            }
+        }
+
+        .buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: transform var(--transition), box-shadow var(--transition);
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px var(--shadow);
+        }
+
+        .btn:focus {
+            outline: 3px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: #ffffff;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: #ffffff;
+        }
+
+        footer {
+            margin-top: 32px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.875rem;
+            text-align: center;
+        }
+
+        footer a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                padding: 32px 24px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .avatar {
+                width: 100px;
+                height: 100px;
+                font-size: 40px;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h1>Hello World! 👋</h1>
-        <p>I just created my first GitHub repository!</p>
-        <p>This is pretty cool.</p>
-    </div>
+    <main>
+        <article class="card">
+            <div class="avatar" role="img" aria-label="Wave emoji">
+                👋
+            </div>
+            <h1>Anish Moonka</h1>
+            <p class="subtitle">Investor & Tech Enthusiast</p>
+            <p class="bio">
+                9 years deep into the markets, still chasing that elusive 100-bagger.
+                I break down businesses, hunt for compounders, and share what I learn along the way.
+            </p>
+            <div class="skills" aria-label="Interests">
+                <span class="skill-tag">Investing</span>
+                <span class="skill-tag">Stock Analysis</span>
+                <span class="skill-tag">Business Breakdowns</span>
+                <span class="skill-tag">Fintech</span>
+            </div>
+            <div class="buttons">
+                <a href="https://x.com/AnishA_Moonka" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                    𝕏 Twitter
+                </a>
+                <a href="mailto:moonkanish@gmail.com" class="btn btn-secondary">
+                    Contact
+                </a>
+            </div>
+        </article>
+    </main>
+    <footer>
+        <p>Built with curiosity by <a href="https://github.com/AnishMoonka">Anish Moonka</a></p>
+    </footer>
 </body>
 </html>
