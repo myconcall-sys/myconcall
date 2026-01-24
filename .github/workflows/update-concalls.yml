@@ -1,0 +1,44 @@
+name: Update Screener Concalls
+
+on:
+  schedule:
+    # Run daily at 7:00 AM IST (1:30 AM UTC)
+    - cron: '30 1 * * *'
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  update-concalls:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run concalls scraper
+        env:
+          SCREENER_USERNAME: ${{ secrets.SCREENER_USERNAME }}
+          SCREENER_PASSWORD: ${{ secrets.SCREENER_PASSWORD }}
+          GOOGLE_CREDENTIALS_BASE64: ${{ secrets.GOOGLE_CREDENTIALS_BASE64 }}
+        run: |
+          python screener_login.py
+
+      - name: Upload CSV backup
+        uses: actions/upload-artifact@v4
+        with:
+          name: concalls-csv
+          path: concalls.csv
+          retention-days: 7
