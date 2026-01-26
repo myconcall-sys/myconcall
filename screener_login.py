@@ -327,43 +327,65 @@ def parse_calendar_datetime(dt_string: str) -> Optional[datetime]:
 
 
 def event_exists_in_calendar(
-    events: list[dict],
+    service,
+    calendar_id: str,
     company: str,
     start_dt: datetime
 ) -> bool:
-    """Check if a similar event already exists in the calendar.
+    """Check if a similar event already exists in the calendar by searching.
 
-    Matches if there's an event at the same time (within 5 minutes) with similar company name.
+    Uses Calendar API search to find events with the company name.
     """
     company_normalized = normalize_company_name(company)
-    company_words = [w for w in company_normalized.split() if len(w) > 3]
-
-    for event in events:
-        # Get event start time
-        event_start = event.get('start', {})
-        event_datetime_str = event_start.get('dateTime', '')
+    # Get first significant word for search
+    company_words = [w for w in company.split() if len(w) > 3]
+    search_term = company_words[0] if company_words else company.split()[0]
+    
+    # Search for events with this company name around the target time
+    time_min = (start_dt - timedelta(hours=1)).strftime('%Y-%m-%dT%H:%M:%S') + '+05:30'
+    time_max = (start_dt + timedelta(hours=1)).strftime('%Y-%m-%dT%H:%M:%S') + '+05:30'
+    
+    try:
+        events_result = service.events().list(
+            calendarId=calendar_id,
+            timeMin=time_min,
+            timeMax=time_max,
+            q=search_term,
+            maxResults=50,
+            singleEvents=True
+        ).execute()
         
-        event_dt = parse_calendar_datetime(event_datetime_str)
-        if not event_dt:
-            continue
+        events = events_result.get('items', [])
+        logger.info(f"Search for '{search_term}' near {start_dt.strftime('%H:%M')}: found {len(events)} events")
+        
+        for event in events:
+            event_start = event.get('start', {})
+            event_datetime_str = event_start.get('dateTime', '')
+            summary = event.get('summary', '')
+            
+            event_dt = parse_calendar_datetime(event_datetime_str)
+            if not event_dt:
+                continue
 
-        # Compare times (within 5 minutes)
-        time_diff = abs((event_dt - start_dt).total_seconds())
-        if time_diff <= 300:  # 5 minutes tolerance
-            summary = event.get('summary', '').lower()
+            time_diff = abs((event_dt - start_dt).total_seconds())
             
-            # Check if company name or significant words appear in summary
-            if company_normalized in summary:
-                logger.info(f"Found exact match in main calendar: '{summary}' matches '{company}'")
-                return True
-            
-            # Check if any significant word from company name is in summary
-            for word in company_words:
-                if word in summary:
-                    logger.info(f"Found word match in main calendar: '{word}' in '{summary}' for '{company}'")
+            if time_diff <= 300:  # 5 minutes tolerance
+                summary_lower = summary.lower()
+                
+                if company_normalized in summary_lower:
+                    logger.info(f"DUPLICATE FOUND: '{summary}' matches '{company}'")
                     return True
-
-    return False
+                
+                for word in company_words:
+                    if word.lower() in summary_lower:
+                        logger.info(f"DUPLICATE FOUND: '{word}' in '{summary}'")
+                        return True
+                        
+        return False
+        
+    except HttpError as e:
+        logger.warning(f"Search failed for {company}: {e}")
+        return False
 
 
 def sync_to_google_calendar(
@@ -531,7 +553,7 @@ Auto-synced from Screener.in"""
                 if concall_id in main_calendar_events:
                     logger.info(f"Already in main calendar (by ID): {c['company']}")
                 # Check by time and company name (catches any existing events)
-                elif event_exists_in_calendar(main_calendar_all_events, c['company'], start_dt):
+                elif event_exists_in_calendar(service, MAIN_CALENDAR_ID, c['company'], start_dt):
                     logger.info(f"Skipping duplicate in main calendar: {c['company']} at {start_dt}")
                 else:
                     try:
