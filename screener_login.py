@@ -47,7 +47,7 @@ SHEET_NAME = "Screener Concalls"
 CREDENTIALS_FILE = "credentials.json"
 
 # Google Calendar settings
-CALENDAR_ID = "e9b665f1aa7c91203430bcad9af20c3df9d9f4aa45ffe455cb2be475396b1d07@group.calendar.google.com"
+CALENDAR_ID = "05317d5c798cdadf35929000ef893485bf95bb6d2a0f84198ac40d0c7ef0fce0@group.calendar.google.com"
 MAIN_CALENDAR_ID = "myconcall@gmail.com"  # For My Stonks - copy to main calendar
 CONCALL_DURATION_HOURS = 1
 
