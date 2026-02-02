@@ -92,7 +92,7 @@ jobs:
           username: ${{ secrets.EMAIL_USERNAME }}
           password: ${{ secrets.EMAIL_PASSWORD }}
           subject: ✅ Concalls Sync Completed - ${{ github.run_id }}
-          to: moonkanish@gmail.com
+          to: myconcall@gmail.com
           from: Concalls Bot <${{ secrets.EMAIL_USERNAME }}>
           body: |
             Daily concalls sync completed successfully!
@@ -112,7 +112,7 @@ jobs:
           username: ${{ secrets.EMAIL_USERNAME }}
           password: ${{ secrets.EMAIL_PASSWORD }}
           subject: ⚠️ Concalls Sync FAILED - ${{ github.run_id }}
-          to: moonkanish@gmail.com
+          to: myconcall@gmail.com
           from: Concalls Bot <${{ secrets.EMAIL_USERNAME }}>
           body: |
             ⚠️ Daily concalls sync failed!
