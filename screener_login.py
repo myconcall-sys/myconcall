@@ -48,7 +48,7 @@ CREDENTIALS_FILE = "credentials.json"
 
 # Google Calendar settings
 CALENDAR_ID = "e9b665f1aa7c91203430bcad9af20c3df9d9f4aa45ffe455cb2be475396b1d07@group.calendar.google.com"
-MAIN_CALENDAR_ID = "moonkanish@gmail.com"  # For My Stonks - copy to main calendar
+MAIN_CALENDAR_ID = "myconcall@gmail.com"  # For My Stonks - copy to main calendar
 CONCALL_DURATION_HOURS = 1
 
 # Calendar color IDs (1-11): Lavender, Sage, Grape, Flamingo, Banana, Tangerine, Peacock, Graphite, Blueberry, Basil, Tomato
