@@ -39,7 +39,7 @@ from googleapiclient.errors import HttpError
 # Scraper settings
 TARGET_CONCALL_COUNT = 100
 PAGE_LOAD_TIMEOUT = 10  # seconds
-REQUEST_TIMEOUT = 30  # seconds
+REQUEST_TIMEOUT = 5  # seconds
 RATE_LIMIT_DELAY = 0.3  # seconds between PDF downloads
 
 # Google Sheets settings
