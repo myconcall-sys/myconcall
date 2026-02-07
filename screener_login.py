@@ -147,12 +147,12 @@ def write_to_google_sheets(concalls: list[dict]) -> str:
 
     creds = get_google_credentials()
     client = gspread.authorize(creds)
-
+    FOLDER_ID='1HR-qKbquXEYPpf4uvVCswCqFnZiUC2VJ'
     try:
-        sheet = client.open(SHEET_NAME)
+        sheet = client.open(SHEET_NAME, folder_id=FOLDER_ID)
         logger.info(f"Opened existing sheet: {SHEET_NAME}")
     except gspread.SpreadsheetNotFound:
-        sheet = client.create(SHEET_NAME)
+        sheet = client.create(SHEET_NAME, folder_id=FOLDER_ID)
         logger.info(f"Created new sheet: {SHEET_NAME}")
 
     worksheet = sheet.sheet1
